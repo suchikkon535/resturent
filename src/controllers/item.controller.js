@@ -16,7 +16,7 @@ exports.createItem = asyncHandler(async (req, res) => {
         name,
         description,
         price,
-        category: getCategory.name,
+        category,
         image: {
             url: req.file.path,
             public_id: req.file.filename,
@@ -28,6 +28,12 @@ exports.createItem = asyncHandler(async (req, res) => {
 
 exports.getItems = asyncHandler(async (req, res) => {
     const items = await Item.find();
+    res.json(new ApiResponse(200, "Items fetched successfully", items));
+});
+
+exports.getItemsByCategory = asyncHandler(async (req, res) => {
+    const category = req.params.category;
+    const items = await Item.find({ category });
     res.json(new ApiResponse(200, "Items fetched successfully", items));
 });
 

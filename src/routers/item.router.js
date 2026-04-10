@@ -8,9 +8,10 @@ const { authRoles } = require("../middlewares/role.middleware");
 
 router.use(auth);
 
-router.post("/createItem", authRoles("admin", "staff", "user"), upload.single("image"), Validate({ body: ["name", "description", "price", "category"] }), ItemCtrl.createItem);
+router.post("/createItem", authRoles("admin", "staff"), upload.single("image"), Validate({ body: ["name", "description", "price", "category"] }), ItemCtrl.createItem);
 router.get("/getItems", ItemCtrl.getItems);
 router.get("/getItemById/:id", ItemCtrl.getItemById);
+router.get("/getItemsByCategory/:category", ItemCtrl.getItemsByCategory);
 router.put("/updateItem/:id", authRoles("admin", "staff"), Validate({ body: ["name", "description", "price", "category"] }), ItemCtrl.updateItem);
 router.delete("/deleteItem/:id", authRoles("admin", "staff"), ItemCtrl.deleteItem);
 

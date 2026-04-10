@@ -33,7 +33,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
 })
 
 exports.getProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id).select("-_id -password");
+    const user = await User.findById(req.user._id).select("-_id -password -__v -updatedAt");
 
     res.json(new ApiResponse(200, "User profile fetched successfully", user));
 })
