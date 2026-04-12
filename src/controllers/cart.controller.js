@@ -10,6 +10,10 @@ exports.addToCart = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { itemId, quantity } = req.body;
 
+  if (typeof quantity !== "number") {
+    throw new ApiError(400, "Quantity must be a number");
+  }
+
   if (quantity < 1) {
     throw new ApiError(400, "Quantity must be at least 1");
   }
@@ -70,7 +74,7 @@ exports.addToCart = asyncHandler(async (req, res) => {
 });
 
 exports.userCartItems = asyncHandler(async (req, res) => {
-  
+
   const cart = await Cart.findOne({ user: req.user._id })
     .populate("items.item", "title description image.url")
     .select("items totalItems totalPrice createdAt");

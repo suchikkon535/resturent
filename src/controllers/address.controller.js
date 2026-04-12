@@ -10,14 +10,14 @@ exports.createAdderss = asyncHandler(async (req, res) => {
 
     const addressLength = await address.countDocuments({ user })
 
-    if ( addressLength >= 3) {
+    if ( addressLength >= 3 ) {
         throw new ApiError(400, "You can only have up to 3 addresses!")
     }
 
     if (data.isDefault) {
         const defaultCheck = await address.findOne({
-            user, 
-            isDefault: true 
+            user,
+            isDefault: true
         });
 
         if (defaultCheck) {

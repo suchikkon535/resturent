@@ -7,6 +7,9 @@ const errorHandler = require("./utils/errorHandler");
 const userRouter = require("./routers/user.router");
 const itemRouter = require("./routers/item.router");
 const categoryRouter = require("./routers/category.router");
+const addressRouter = require("./routers/address.router");
+const orderRouter = require("./routers/order.router");  
+const cartRouter = require("./routers/cart.router");
 
 const app = express();
 
@@ -17,7 +20,9 @@ app.get("/", (req, res) => {res.json({ message: "Welcome to the restaurant API" 
 app.use("/api/auth", userRouter);
 app.use("/api/items", itemRouter);
 app.use("/api/categorys", categoryRouter);
-
+app.use("/api/address", addressRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/cart", cartRouter);
 
 app.use(errorHandler);
 

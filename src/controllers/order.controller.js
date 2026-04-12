@@ -27,7 +27,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
     const orderItems = cart.items.map((i) => ({
       item: i.item._id,
-      name: i.item.title,
+      name: i.item.name,
       price: i.price,
       quantity: i.quantity,
       image: i.item.image?.url,
