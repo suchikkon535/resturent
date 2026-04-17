@@ -4,6 +4,7 @@ const Address = require("../models/address.model");
 const ApiError = require("../utils/ApiError")
 const ApiResponse = require("../utils/ApiResponse")
 const asyncHandler = require("../utils/asyncHandler");
+const { getPagination } = require("../utils/pagination")
 
 
 exports.createOrder = asyncHandler(async (req, res) => {
@@ -58,3 +59,49 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
   res.json(new ApiResponse(201, "Order plased Successfully", order))
 });
+
+exports.OrdersById = asyncHandler(async (req, res) => {
+
+  const userId = req.user._id
+  const orders = await Order.find({ user: userId }).select("-user -__v").populate("items.item", "-user -__v").lean()
+  console.log(orders)
+
+  res.json(new ApiResponse(200, "All Orders", orders))
+})
+
+exports.allOrders = asyncHandler(async (req, res) => {
+  const { page, limit, skip } = getPagination(req)
+
+  const [orders, total] = await Promise.all([
+    Order.find()
+      .select("totalItems status paymentStatus paymentMethod")
+      .populate({
+        path: "items.item",
+        select: "name price category",
+        populate: {
+          path: "category",
+          select: "name -_id"
+        }
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean(),
+
+    Order.countDocuments()
+  ])
+
+  res.json(
+    new ApiResponse(
+      200,
+      "All Orders",
+      orders,
+      {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    )
+  )
+})
